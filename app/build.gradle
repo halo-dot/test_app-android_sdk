@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+repositories {
+    mavenLocal()
+}
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "za.co.synthesis.halo.halotestapp"
+        minSdkVersion 26
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    namespace 'za.co.synthesis.halo.halotestapp'
+}
+
+dependencies {
+    implementation 'com.auth0:java-jwt:3.9.0'
+
+    // Declare dependencies for the Halo SDK
+    debugImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '2.1.26-debug'
+    releaseImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '2.1.26'
+}
+
+project.afterEvaluate {
+    android.applicationVariants.configureEach { variant ->
+        tasks.register("installRun${variant.name.capitalize()}", Exec) {
+            dependsOn("install${variant.name.capitalize()}")
+            group = "run"
+            commandLine = ["adb", "shell", "monkey", "-p", variant.applicationId, "1"]
+            doLast {
+                println "Launching ${variant.applicationId}"
+            }
+        }
+    }
+}
+
+configurations.configureEach {
+    resolutionStrategy.cacheChangingModulesFor 1, 'days'
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("androidx.core:core-ktx")) with module("androidx.core:core-ktx:(*, 1.3.2]")
+        substitute(module("org.jetbrains.kotlin:kotlin-stdlib-jdk7")) with module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:(*, 1.3.72]")
+        substitute(module("org.jetbrains.kotlin:kotlin-stdlib-jdk8")) with module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:(*, 1.3.72]")
+        substitute(module("org.jetbrains.kotlin:kotlin-stdlib-common")) with module("org.jetbrains.kotlin:kotlin-stdlib-common:(*, 1.3.72]")
+    }
+}

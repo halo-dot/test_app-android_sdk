@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HaloSDK Test Application</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="charge">Charge</string>
+    <string name="present_card">Present Card</string>
+    <string name="cancel">Cancel</string>
+</resources>
