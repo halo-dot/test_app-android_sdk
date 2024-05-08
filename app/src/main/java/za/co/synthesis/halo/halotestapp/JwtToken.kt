@@ -28,7 +28,7 @@ class JwtToken {
         // Create JWT token
         val jwt = JWT
             .create()
-            .withAudience(Config.OFFLINE_HOST)
+            .withAudience(Config.HOST)
             .withIssuer(Config.ISSUER)
             .withSubject(Config.MERCHANT_ID)
             .withClaim("aud_fingerprints", "sha256/zc6c97JhKPZUa+rIrVqjknDE1lDcDK77G41sDo+1ay0=")
