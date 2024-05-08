@@ -3,19 +3,21 @@ plugins {
     id 'kotlin-android'
 }
 
-repositories {
-    mavenLocal()
-}
-
 android {
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "za.co.synthesis.halo.halotestapp"
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 
     buildTypes {
@@ -31,14 +33,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
 
     buildFeatures {
         viewBinding true
@@ -53,19 +47,6 @@ dependencies {
     // Declare dependencies for the Halo SDK
     debugImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '2.1.26-debug'
     releaseImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '2.1.26'
-}
-
-project.afterEvaluate {
-    android.applicationVariants.configureEach { variant ->
-        tasks.register("installRun${variant.name.capitalize()}", Exec) {
-            dependsOn("install${variant.name.capitalize()}")
-            group = "run"
-            commandLine = ["adb", "shell", "monkey", "-p", variant.applicationId, "1"]
-            doLast {
-                println "Launching ${variant.applicationId}"
-            }
-        }
-    }
 }
 
 configurations.configureEach {
