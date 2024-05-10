@@ -35,7 +35,7 @@ object Config {
 
 local.properties:
 ```properties
-sdk.dir=~/Library/Android/sdk
+sdk.dir=path/to/your/android/sdk
 aws.accessKey=your_access_key
 aws.secretKey=your_secret_key
 ```
