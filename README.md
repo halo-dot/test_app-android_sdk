@@ -23,7 +23,6 @@ Prerequisites: Before running this application, you need to replace the followin
 ---
 
 Config.kt:
-
 ```kotlin
 object Config {
     const val PRIVATE_KEY_PEM = "your_private_key"

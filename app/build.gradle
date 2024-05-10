@@ -43,6 +43,9 @@ android {
 
 dependencies {
     implementation 'com.auth0:java-jwt:3.9.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
 
     // Declare dependencies for the Halo SDK
     debugImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '2.1.26-debug'
