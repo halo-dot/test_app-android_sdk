@@ -196,6 +196,8 @@ class MainActivity : AppCompatActivity() {
      */
     fun onClear(view: View) {
         tfAmount.setText("0")
+        tfReferenceValue.setText("")
+        tfReferenceValue.clearFocus()
     }
 
     /**

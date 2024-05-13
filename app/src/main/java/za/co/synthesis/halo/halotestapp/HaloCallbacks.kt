@@ -7,6 +7,9 @@ import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import za.co.synthesis.halo.haloCommonInterface.*
 import za.co.synthesis.halo.sdk.model.*
+import java.math.BigDecimal
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 private const val TAG = "HaloCallbacks"
 
@@ -79,16 +82,18 @@ class HaloCallbacks(private val activity: MainActivity, private val timer: Timer
             append("Code: <b>${result.errorCode}</b><br><br>")
             result.merchantTransactionReference?.let { append("Transaction Reference: <b>$it</b><br><br>") }
             result.receipt?.apply {
-                transactionDate.takeIf { it.isNotBlank() }?.let { append("Transaction Date: <b>$it</b><br><br>") }
-                transactionTime.takeIf { it.isNotBlank() }?.let { append("Transaction Time: <b>$it</b><br><br>") }
-                maskedPAN.takeIf { it.isNotBlank() }?.let { append("Masked PAN: <b>$it</b><br><br>") }
-                panSequenceNumber?.takeIf { it.isNotBlank() }?.let { append("Pan Sequence Number: <b>$it</b><br><br>") }
-                applicationLabel?.takeIf { it.isNotBlank() }?.let { append("Application Label: <b>$it</b><br><br>") }
-                aid?.takeIf { it.isNotBlank() }?.let { append("Aid: <b>$it</b><br><br>") }
-                tvr?.takeIf { it.isNotBlank() }?.let { append("Tvr: <b>$it</b><br><br>") }
-                currencyCode?.let { append("Currency Code: <b>$it</b><br><br>") }
-                disposition?.let { append("Disposition: <b>$it</b><br><br>") }
-                amountAuthorised?.let { append("Amount Authorised: <b>$it</b><br><br>") }
+                appendIfNotBlank("Transaction Date", transactionDate.format("ddMMyy", "dd/MM/yy"))
+                appendIfNotBlank("Transaction Time", transactionTime.format("HHmmss", "HH:mm:ss"))
+                appendIfNotBlank("Masked PAN", maskedPAN)
+                appendIfNotBlank("Pan Sequence Number", panSequenceNumber)
+                appendIfNotBlank("Application Label", applicationLabel)
+                appendIfNotBlank("Aid", aid)
+                appendIfNotBlank("Tvr", tvr)
+                appendIfNotBlank("Disposition", disposition)
+                amountAuthorised?.let {
+                    val formattedAmount = "R${BigDecimal(it).movePointLeft(2)}"
+                    append("Amount Authorised: <b>$formattedAmount</b><br><br>")
+                }
             }
         }
 
@@ -101,6 +106,18 @@ class HaloCallbacks(private val activity: MainActivity, private val timer: Timer
 
     private fun splitCamelCase(input: String): String {
         return input.replace(Regex("(?<=[a-z])(?=[A-Z])"), " ")
+    }
+
+    private fun StringBuilder.appendIfNotBlank(label: String, value: String?) {
+        value?.takeIf { it.isNotBlank() }?.let { append("$label: <b>$it</b><br><br>") }
+    }
+
+    private fun String?.format(pattern1: String, pattern2: String): String? {
+        return this?.let {
+            SimpleDateFormat(pattern1, Locale.getDefault()).parse(it)?.let { date ->
+                SimpleDateFormat(pattern2, Locale.getDefault()).format(date)
+            }
+        }
     }
 
     override fun onRequestJWT(callback: (String) -> Unit) {
