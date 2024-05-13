@@ -12,6 +12,7 @@ Prerequisites: Before running this application, you need to replace the followin
 
 - In `Config.kt`:
   - `PRIVATE_KEY_PEM` with your private key.
+  - `ISSUER` with your issuer claim.
   - `USERNAME` with your username.
 
 - In `local.properties` file (should be created in the root folder):
@@ -22,20 +23,19 @@ Prerequisites: Before running this application, you need to replace the followin
 ---
 
 Config.kt:
-
 ```kotlin
 object Config {
-    const val PRIVATE_KEY_PEM = "your_private_key_pem"
-    const val USERNAME = "your_username"
-    const val MERCHANT_ID = "12345678-9abc-def0-1234-56789abcdef0"
-    const val OFFLINE_HOST = "kernelserver.qa.haloplus.io"
-    const val ISSUER = "synthesis.test.co.za"
+    const val PRIVATE_KEY_PEM = "your_private_key"
+    const val ISSUER = "issuer.claim"
+    const val USERNAME = "username"
+    const val MERCHANT_ID = "mer12345678"
+    const val HOST = "kernelserver.qa.haloplus.io"
 }
 ```
 
 local.properties:
 ```properties
-sdk.dir=~/Library/Android/sdk
+sdk.dir=path/to/your/android/sdk
 aws.accessKey=your_access_key
 aws.secretKey=your_secret_key
 ```

@@ -22,7 +22,7 @@ class JwtToken {
 
         // Generate Private Key
         val privateKey = KeyFactory.getInstance("RSA").generatePrivate(
-            PKCS8EncodedKeySpec(Base64.decode(Config.PRIVATE_KEY_PEM, Base64.DEFAULT))
+            PKCS8EncodedKeySpec(Base64.decode(extractPrivateKey(Config.PRIVATE_KEY_PEM), Base64.DEFAULT))
         )
 
         // Create JWT token
@@ -41,5 +41,19 @@ class JwtToken {
 
         // Pass the JWT token through callback function
         callback(jwt)
+    }
+
+    private fun extractPrivateKey(privateKey: String): String {
+        val beginMarker = "-----BEGIN PRIVATE KEY-----"
+        val endMarker = "-----END PRIVATE KEY-----"
+
+        val startIndex = privateKey.indexOf(beginMarker)
+        val endIndex = privateKey.indexOf(endMarker)
+
+        return if (startIndex != -1 && endIndex != -1) {
+            privateKey.substring(startIndex + beginMarker.length, endIndex).trim()
+        } else {
+            privateKey
+        }
     }
 }
