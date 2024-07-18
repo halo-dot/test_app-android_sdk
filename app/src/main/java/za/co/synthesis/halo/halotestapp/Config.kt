@@ -10,7 +10,7 @@ object Config {
 
    // The MID of the merchant
    // Used to populate the "sub" claim of the JWT
-   const val MERCHANT_ID = "mer12345678"
+   const val MERCHANT_ID = "{D8208288-E869-4726-B198-364D66EC9243}"
 
    // Username of the merchant
    // Will populate the "usr" claim in the JWT
