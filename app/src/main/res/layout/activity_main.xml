@@ -199,8 +199,9 @@
             android:layout_columnWeight="1"
             android:background="@android:color/transparent"
             android:onClick="onClear"
-            android:text="CL"
             android:textColor="#000000"
+            android:drawableLeft="@drawable/ic_back"
+            android:paddingLeft="40dp"
             android:textSize="40sp" />
     </GridLayout>
 
@@ -252,4 +253,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/logo"
+        android:contentDescription="Logo"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
