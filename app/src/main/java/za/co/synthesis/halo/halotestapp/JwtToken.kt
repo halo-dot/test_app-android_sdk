@@ -31,7 +31,7 @@ class JwtToken {
             .withAudience(Config.HOST)
             .withIssuer(Config.ISSUER)
             .withSubject(Config.MERCHANT_ID)
-            .withClaim("aud_fingerprints", "sha256/zc6c97JhKPZUa+rIrVqjknDE1lDcDK77G41sDo+1ay0=")
+            .withClaim("aud_fingerprints", "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA=")
             .withClaim("ksk_pin", "sha256/1Zna4T6PKcJ3Kq/dbVylb8n62j/AdQYUzWrj/4sk5Q8=")
             .withClaim("usr", Config.USERNAME)
             .withIssuedAt(Date())
