@@ -5,7 +5,7 @@ Description: This project is a demo app showcasing the integration of the Halo S
 Project Information:
 
 - Gradle version: 7.4.2
-- Kotlin version: 1.6.21
+- Kotlin version: 1.9.10
 - Dokka version: 1.4.32
 
 Prerequisites: Before running this application, you need to replace the following placeholders with your own values:
