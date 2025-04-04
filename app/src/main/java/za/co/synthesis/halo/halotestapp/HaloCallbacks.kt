@@ -25,6 +25,7 @@ class HaloCallbacks(private val activity: MainActivity, private val timer: Timer
         Log.d(TAG, "onInitializationResult ${result.resultType}")
         Log.d(TAG, "onInitializationResult Error Code: ${result.errorCode}")
         Log.d(TAG, "onInitializationResult Country Code: ${result.terminalCountryCode}")
+        activity.initialized = true
 
         activity.runOnUiThread {
             activity.findViewById<TextView>(R.id.tvTapInstruction).text =
