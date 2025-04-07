@@ -2,6 +2,7 @@ package za.co.synthesis.halo.halotestapp
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
@@ -16,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.common.api.Api
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import za.co.synthesis.halo.sdk.HaloSDK
@@ -33,21 +35,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var keypadLayout: GridLayout
     private lateinit var tvTapInstruction: TextView
     private lateinit var btnCancel: Button
+    private var permissionRetries: Int = 2
+    private var permissionsGranted: Boolean = false
+
+    // does not mean successful initialization
+    var initialized: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // Initialize Halo SDK
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        if (requestNecessaryPermissions()) {
             initializeHaloSdk()
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 10)
         }
-
         // Initialize UI Components
         initializeUI()
-
         // Set Click Listeners
         setClickListeners()
     }
@@ -80,6 +83,41 @@ class MainActivity : AppCompatActivity() {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             }
+        }
+    }
+
+    private fun requestNecessaryPermissions(): Boolean {
+        permissionRetries--
+
+        if (permissionRetries >= 0) {
+            Log.d(TAG, "Permission retries left: $permissionRetries")
+        } else {
+            Toast.makeText(this, "Necessary permissions not granted", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        val outstandingPermissions = mutableListOf<String>()
+        val requiredPermissions = mutableListOf(Manifest.permission.CAMERA)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            requiredPermissions.add(Manifest.permission.BLUETOOTH_SCAN)
+            requiredPermissions.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+        requiredPermissions.forEach { permission ->
+            val res = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+            if (!res) {
+                outstandingPermissions.add(permission)
+            }
+        }
+
+        if (outstandingPermissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, outstandingPermissions.toTypedArray(), 10)
+            Toast.makeText(this, "Please grant all permissions to use the app", Toast.LENGTH_LONG).show()
+            permissionsGranted = false
+            return false
+        } else {
+            Log.d(TAG, "All permissions granted")
+            permissionsGranted = true
+            return true
         }
     }
 
@@ -224,8 +262,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 10 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        val permissionsAccepted = grantResults.fold(true) { acc, i -> acc && (i == PackageManager.PERMISSION_GRANTED) }
+        if (requestCode == 10 && grantResults.isNotEmpty() && permissionsAccepted) {
+            permissionsGranted = true
             initializeHaloSdk()
+        } else {
+            if (!requestNecessaryPermissions()) {
+                Toast.makeText(this, "Please grant all permissions to use the app", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -257,7 +301,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         Log.d(TAG, "ON RESUME IS CALLED")
         // your mobile app code here
-        HaloSDK.onResume()
+        if (permissionsGranted && initialized) {
+            HaloSDK.onResume()
+        }
     }
 
     override fun onPause() {
