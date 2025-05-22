@@ -38,9 +38,7 @@ class HaloCallbacks(
         Log.d(TAG, "onInitializationResult Country Code: ${result.terminalCountryCode}")
 
         activity.runOnUiThread {
-            // activity.findViewById<TextView>(R.id.tvTapInstruction).text = "Initialize: ${result.errorCode}"
-            // val btnCharge = activity.findViewById<Button>(R.id.btnCharge)
-            // Proceed with payment if initialized successfully
+
             if (result.errorCode != HaloErrorCode.OK) {
                 Log.d("error ", "errorCode : " + result.errorCode)
                 Toast.makeText(activity, "SDK failed to initialize", Toast.LENGTH_SHORT).show()
@@ -50,8 +48,6 @@ class HaloCallbacks(
                 onInitializationSuccess.invoke()
                 Log.d("HaloCallbacks", "SDK initialized successfully")
                 myApplication.isInitialized = true
-                // btnCharge.isEnabled = true
-                // btnCharge.isClickable = true
             }
 
             // Log any warnings
@@ -70,9 +66,6 @@ class HaloCallbacks(
         Log.d(TAG, "Message ID: ${message.msgID}")
         Log.d(TAG, "Offline Balance: ${message.offlineBalance}")
         Log.d(TAG, "Transaction Amount: ${message.transactionAmount}")
-        // activity.runOnUiThread {
-        //     activity.findViewById<TextView>(R.id.tvTapInstruction).text = message.msgID.Value()
-        // }
     }
 
     /**
@@ -115,19 +108,12 @@ class HaloCallbacks(
              val intent = Intent(activity, TransactionSuccessAct::class.java).apply {
                  putExtra("TRANSACTION_ID", result.merchantTransactionReference)
                  putExtra("CARD_NUMBER", result.receipt?.maskedPAN.toString())
-                 putExtra("TRANSACTION_STATUS", "Transaction: Successful")
-                 putExtra("REFERENCE_NUMBER", result.merchantTransactionReference.toString())
-                 putExtra("TOTAL_AMOUNT", formattedAmount)
-                 putExtra("TRANSACTION_OUTCOME", resultString.toString())
-                 putExtra("CARD_TYPE", "MASTERCARD")
              }
             activity.startActivity(intent)
             PayActivityTest.currentInstance?.get()?.finish()
         } else {
-            Log.d("HaloCallbacks", "Transaction completed successfully")
-            activity.runOnUiThread {
-                //activity.findViewById<TextView>(R.id.txtLoadMessage).text = "Transaction completed successfully."
-            }
+            Log.d("HaloCallbacks", "Transaction completed unsuccessfully")
+
             var formattedAmount = ""
             result.receipt?.amountAuthorised?.let {
                 formattedAmount = "${BigDecimal(it).movePointLeft(2)}"
@@ -135,11 +121,6 @@ class HaloCallbacks(
             val intent = Intent(activity, TransactionSuccessAct::class.java).apply {
                 putExtra("TRANSACTION_ID", result.merchantTransactionReference)
                 putExtra("CARD_NUMBER", result.receipt?.maskedPAN.toString())
-                putExtra("TRANSACTION_STATUS", "Transaction: unsuccessful")
-                putExtra("REFERENCE_NUMBER", result.merchantTransactionReference.toString())
-                putExtra("TOTAL_AMOUNT", formattedAmount)
-                putExtra("TRANSACTION_OUTCOME", resultString.toString())
-                putExtra("CARD_TYPE", "MASTERCARD")
             }
             activity.startActivity(intent)
             PayActivityTest.currentInstance?.get()?.finish()
