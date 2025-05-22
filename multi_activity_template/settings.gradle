@@ -1,0 +1,57 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
+def accessKeyLocal = ''
+def secretKeyLocal = ''
+def tokenKeyLocal = ''
+
+Properties properties = new Properties()
+def propertiesFile = new File(rootDir, 'local.properties')
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+}
+
+accessKeyLocal = properties.getProperty('aws.accessKey')
+secretKeyLocal = properties.getProperty('aws.secretKey')
+tokenKeyLocal = System.getenv('AWS_SESSION_TOKEN')
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        def repos = ['releases', 'snapshots']
+        repos.each { repo ->
+            maven {
+                name = repo
+                url = "s3://synthesis-halo-artifacts/$repo"
+
+                credentials(AwsCredentials) {
+                    accessKey = accessKeyLocal
+                    secretKey = secretKeyLocal
+                    if (tokenKeyLocal != null) {
+                        sessionToken = tokenKeyLocal
+                    }
+                }
+            }
+        }
+
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+rootProject.name = "multiactivitytemplate"
+include ':app'
