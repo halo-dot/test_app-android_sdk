@@ -10,4 +10,8 @@ object Config {
     const val USERNAME = ""
 
     const val HOST = ""
+
+    const val KSK_PIN = ""
+
+    const val AUDIENCE_FINGERPRINT = ""
 }
