@@ -19,4 +19,8 @@ object Config {
    // The backend host to send Halo traffic to
    // Under normal circumstances, this shouldn't be changed
    const val HOST = "kernelserver.qa.haloplus.io"
+
+   const val AUD = "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA="
+
+   const val KSK = "sha256/1Zna4T6PKcJ3Kq/dbVylb8n62j/AdQYUzWrj/4sk5Q8="
 }
