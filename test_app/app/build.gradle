@@ -53,6 +53,6 @@ dependencies {
     implementation 'androidx.test.ext:junit-ktx:1.2.1'
 
     // Declare dependencies for the Halo SDK
-    debugImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '4.0.2-debug'
-    releaseImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '4.0.2'
+    debugImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '4.0.6-debug'
+    releaseImplementation group: 'za.co.synthesis.halo', name: 'sdk', version: '4.0.6'
 }
