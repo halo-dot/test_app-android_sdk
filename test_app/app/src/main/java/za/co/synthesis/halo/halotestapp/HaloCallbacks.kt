@@ -115,8 +115,13 @@ class HaloCallbacks(private val activity: MainActivity, private val timer: Timer
 
     private fun String?.format(pattern1: String, pattern2: String): String? {
         return this?.let {
-            SimpleDateFormat(pattern1, Locale.getDefault()).parse(it)?.let { date ->
-                SimpleDateFormat(pattern2, Locale.getDefault()).format(date)
+            try {
+                SimpleDateFormat(pattern1, Locale.getDefault()).parse(it)?.let { date ->
+                    SimpleDateFormat(pattern2, Locale.getDefault()).format(date)
+                }
+            } catch (e: java.text.ParseException) {
+                Log.e(TAG, "Error formatting date: '$it' - ${e.message}")
+                null
             }
         }
     }
