@@ -6,7 +6,7 @@ object Config {
    const val PRIVATE_KEY_PEM = "your_private_key"
 
    // The iss claim that was provided when signing up on the developer portal
-   const val ISSUER = "issuer.claim"
+   const val ISSUER = "issuer.claim.name"
 
    // The MID of the merchant
    // Used to populate the "sub" claim of the JWT
@@ -18,9 +18,9 @@ object Config {
 
    // The backend host to send Halo traffic to
    // Under normal circumstances, this shouldn't be changed
-   const val HOST = "kernelserver.qa.haloplus.io"
+   const val HOST = "kernelserver.go.dev.haloplus.io"
 
-   const val AUD = "sha256/CNOtjib4NAlSqDZDY5aknDcVbcfLEWBgnGl/dgec4aA="
+   const val AUD = "sha256/njzWuJWBZoQz5FsWiic9uCXrLkNL+qObPavkJqfwhYc="
 
    const val KSK = "sha256/1Zna4T6PKcJ3Kq/dbVylb8n62j/AdQYUzWrj/4sk5Q8="
 }
